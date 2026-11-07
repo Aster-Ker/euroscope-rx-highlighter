@@ -2,12 +2,16 @@ name: Build
 
 on:
   push:
+    branches: ['**']
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-2022
+    permissions:
+      contents: write   # needed to publish a release on a v* tag
     steps:
       - uses: actions/checkout@v4
 
@@ -28,3 +32,19 @@ jobs:
         with:
           name: RxHighlighter
           path: build/Release/RxHighlighter.dll
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag.TrimStart('v')
+          # The tag must match the version compiled into the plug-in.
+          if (-not (Select-String -Path src/Version.h -Pattern "RXH_VERSION_STRING `"$version`"" -Quiet)) {
+            throw "Tag $tag does not match RXH_VERSION_STRING in src/Version.h"
+          }
+          $notes = "docs/releases/$tag.md"
+          if (-not (Test-Path $notes)) { throw "Missing release notes: $notes" }
+          gh release create $tag build/Release/RxHighlighter.dll --title "RX Highlighter $tag" --notes-file $notes

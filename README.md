@@ -40,7 +40,9 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
 
 ## Install
 
-1. Copy `RxHighlighter.dll` somewhere stable, e.g. next to your other plug-ins in the UK
+1. Download `RxHighlighter.dll` from the
+   [latest release](https://github.com/Aster-Ker/euroscope-rx-highlighter/releases/latest).
+   Copy it somewhere stable, e.g. next to your other plug-ins in the UK
    controller pack (`...\UK\Data\Plugin\`).
 2. EuroScope → **OTHER SET → Plug-ins… → Load** → choose `RxHighlighter.dll`.
    UKCP and vFPC stay loaded as normal. Load order does not matter.
@@ -112,8 +114,9 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A Win32
 cmake --build build --config Release
 ```
 
-If you push this to GitHub, `.github/workflows/build.yml` builds the DLL on every push. Get
-it from the workflow run's *Artifacts*.
+`.github/workflows/build.yml` builds the DLL on every push. To publish a release, bump
+`RXH_VERSION_STRING` in `src/Version.h`, add `docs/releases/vX.Y.Z.md`, then push a tag
+`vX.Y.Z`. The workflow builds the DLL and creates the GitHub release with it attached.
 
 ## Layout
 
