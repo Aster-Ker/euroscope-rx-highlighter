@@ -120,6 +120,7 @@ void RxHighlightPlugin::LoadSettings()
         ParseRgb(v, colour_);
     }
     if (const char* v = GetDataFromSettings("RxNormalColour")) {
+        // "default" (or anything that isn't R,G,B) = EuroScope's own colours.
         normalColourSet_ = ParseRgb(v, normalColour_);
     }
     if (const char* v = GetDataFromSettings("RxLingerMs")) {
@@ -262,7 +263,7 @@ void RxHighlightPlugin::ShowHelp()
 {
     Message(std::string(kCommand) + " status               - connection and settings");
     Message(std::string(kCommand) + " colour R G B         - highlight colour, e.g. .rxh colour 255 230 0");
-    Message(std::string(kCommand) + " normal R G B         - callsign colour when NOT transmitting");
+    Message(std::string(kCommand) + " normal R G B         - callsign colour when NOT transmitting (default white)");
     Message(std::string(kCommand) + " normal default       - use EuroScope's own colours when not transmitting");
     Message(std::string(kCommand) + " linger MS            - keep lit for MS after RX ends (0-10000)");
     Message(std::string(kCommand) + " marker TEXT          - text for the 'Transmitting marker' item");

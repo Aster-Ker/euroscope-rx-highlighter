@@ -17,6 +17,7 @@
   table.list td { padding:4px 10px; border-top:1px solid var(--grid); white-space:nowrap; }
   .a { color:var(--assumed); } .n { color:var(--notified); } .d { color:var(--dim); }
   .rx { color:var(--rx); font-weight:bold; }
+  .w { color:#ffffff; }
   .mk { color:var(--rx); font-weight:bold; width:34px; }
   .msgs { background:#11151b; border:1px solid #333a44; font-size:13px; padding:8px 10px; white-space:nowrap; line-height:1.6; }
   .msgs .h { color:#d2a8ff; }
@@ -31,11 +32,11 @@
       <div class="label">Nobody transmitting</div>
       <table class="list"><caption>Departure List</caption>
         <tr><th>C/S</th><th>RX</th><th>TYPE</th><th>ADES</th><th>SID</th><th>RWY</th><th>STAND</th></tr>
-        <tr><td class="a">BAW123</td><td class="mk"></td><td>B77W</td><td>KJFK</td><td>CPT</td><td>27R</td><td>531</td></tr>
-        <tr><td class="a">EZY45K</td><td class="mk"></td><td>A320</td><td>LFPG</td><td>DET</td><td>27R</td><td>212</td></tr>
-        <tr><td class="n">VIR3</td><td class="mk"></td><td>A35K</td><td>KJFK</td><td>CPT</td><td>27R</td><td>304</td></tr>
-        <tr><td class="d">SAS512</td><td class="mk"></td><td>A20N</td><td>EKCH</td><td>BPK</td><td>27R</td><td>B44</td></tr>
-        <tr><td class="d">DLH4TG</td><td class="mk"></td><td>A321</td><td>EDDF</td><td>DET</td><td>27R</td><td>A12</td></tr>
+        <tr><td class="w">BAW123</td><td class="mk"></td><td>B77W</td><td>KJFK</td><td>CPT</td><td>27R</td><td>531</td></tr>
+        <tr><td class="w">EZY45K</td><td class="mk"></td><td>A320</td><td>LFPG</td><td>DET</td><td>27R</td><td>212</td></tr>
+        <tr><td class="w">VIR3</td><td class="mk"></td><td>A35K</td><td>KJFK</td><td>CPT</td><td>27R</td><td>304</td></tr>
+        <tr><td class="w">SAS512</td><td class="mk"></td><td>A20N</td><td>EKCH</td><td>BPK</td><td>27R</td><td>B44</td></tr>
+        <tr><td class="w">DLH4TG</td><td class="mk"></td><td>A321</td><td>EDDF</td><td>DET</td><td>27R</td><td>A12</td></tr>
       </table>
     </div>
     <div>
@@ -43,10 +44,10 @@
       <table class="list"><caption>Departure List</caption>
         <tr><th>C/S</th><th>RX</th><th>TYPE</th><th>ADES</th><th>SID</th><th>RWY</th><th>STAND</th></tr>
         <tr><td class="rx">BAW123</td><td class="mk">RX</td><td>B77W</td><td>KJFK</td><td>CPT</td><td>27R</td><td>531</td></tr>
-        <tr><td class="a">EZY45K</td><td class="mk"></td><td>A320</td><td>LFPG</td><td>DET</td><td>27R</td><td>212</td></tr>
-        <tr><td class="n">VIR3</td><td class="mk"></td><td>A35K</td><td>KJFK</td><td>CPT</td><td>27R</td><td>304</td></tr>
-        <tr><td class="d">SAS512</td><td class="mk"></td><td>A20N</td><td>EKCH</td><td>BPK</td><td>27R</td><td>B44</td></tr>
-        <tr><td class="d">DLH4TG</td><td class="mk"></td><td>A321</td><td>EDDF</td><td>DET</td><td>27R</td><td>A12</td></tr>
+        <tr><td class="w">EZY45K</td><td class="mk"></td><td>A320</td><td>LFPG</td><td>DET</td><td>27R</td><td>212</td></tr>
+        <tr><td class="w">VIR3</td><td class="mk"></td><td>A35K</td><td>KJFK</td><td>CPT</td><td>27R</td><td>304</td></tr>
+        <tr><td class="w">SAS512</td><td class="mk"></td><td>A20N</td><td>EKCH</td><td>BPK</td><td>27R</td><td>B44</td></tr>
+        <tr><td class="w">DLH4TG</td><td class="mk"></td><td>A321</td><td>EDDF</td><td>DET</td><td>27R</td><td>A12</td></tr>
       </table>
     </div>
   </div>
@@ -94,10 +95,10 @@
 <div class="shot" id="messages">
   <div class="caption"><b>Commands.</b> <code>.rxh test</code> checks the setup without anyone on frequency. <code>.rxh status</code> shows the connection.</div>
   <div class="msgs">
-    <div><span class="h">[RX Highlighter]</span> <span class="c">Version 1.2.0 loaded. Type .rxh for help.</span></div>
+    <div><span class="h">[RX Highlighter]</span> <span class="c">Version 1.3.0 loaded. Type .rxh for help.</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Connected to TrackAudio.</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Lighting up BAW123 for 5 s.</span></div>
-    <div><span class="h">[RX Highlighter]</span> <span class="c">Voice: connected to TrackAudio (WebSocket) on port 49080 | colour 255 230 0 | normal EuroScope default | linger 1500 ms | marker 'RX'</span></div>
+    <div><span class="h">[RX Highlighter]</span> <span class="c">Voice: connected to TrackAudio (WebSocket) on port 49080 | colour 255 230 0 | normal 255 255 255 | linger 1500 ms | marker 'RX'</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Lit up now: BAW123</span></div>
   </div>
   <div class="note">Message text is what the plug-in prints. The chat window styling is illustrative.</div>

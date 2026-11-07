@@ -66,12 +66,12 @@ plug-in provides a callsign column that changes colour itself:
 4. Optional: add a narrow column with **`RX Highlighter: Transmitting marker`**. It shows
    `RX` while the aircraft is transmitting.
 
-When the pilot isn't transmitting, the callsign keeps EuroScope's normal colour (assumed,
-notified, etc.). Only while they're on frequency does it change to the highlight colour.
+When the pilot isn't transmitting, the callsign is **white**. While they're on frequency it
+changes to the highlight colour (yellow by default).
 
-If the callsign looks too dark when nobody is talking, choose your own colour for that, e.g.
-`.rxh normal 255 255 255` for white. This replaces EuroScope's assumed/notified colours in
-that column. Type `.rxh normal default` to go back to EuroScope's colours.
+Choose a different colour for when nobody is talking with `.rxh normal R G B`. Type
+`.rxh normal default` to use EuroScope's own assumed, notified and non-concerned colours
+instead.
 
 Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for 5 seconds.
 
@@ -84,8 +84,8 @@ Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for
 | `.rxh` | Help |
 | `.rxh status` | Connection state, settings and who is lit up |
 | `.rxh colour R G B` | Highlight colour (default `255 230 0`, bright yellow) |
-| `.rxh normal R G B` | Callsign colour when **not** transmitting, e.g. `.rxh normal 255 255 255` |
-| `.rxh normal default` | Use EuroScope's own colours when not transmitting (the default) |
+| `.rxh normal R G B` | Callsign colour when **not** transmitting (default `255 255 255`, white) |
+| `.rxh normal default` | Use EuroScope's own colours when not transmitting |
 | `.rxh linger MS` | Stay lit for MS after the transmission ends (default 1500, 0–10000) |
 | `.rxh marker TEXT` | Text shown by the marker item (default `RX`) |
 | `.rxh port N` | Voice client port (default 49080) |

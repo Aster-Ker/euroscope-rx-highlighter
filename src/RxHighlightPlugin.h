@@ -71,9 +71,10 @@ private:
 
     // Settings
     COLORREF colour_ = RGB(255, 230, 0);
-    // Colour of the callsign when NOT transmitting. Unset = EuroScope's own
-    // colours (assumed / notified / non-concerned etc.).
-    bool normalColourSet_ = false;
+    // Colour of the callsign when NOT transmitting. White by default;
+    // `.rxh normal default` switches to EuroScope's own colours
+    // (assumed / notified / non-concerned etc.).
+    bool normalColourSet_ = true;
     COLORREF normalColour_ = RGB(255, 255, 255);
     std::chrono::milliseconds linger_{1500};
     std::string marker_ = "RX";
