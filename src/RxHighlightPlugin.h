@@ -10,6 +10,7 @@
 #include <windows.h>
 
 #include "EuroScopePlugIn.h"
+#include "MainThreadWaker.h"
 #include "RxState.h"
 #include "VoiceClient.h"
 
@@ -56,8 +57,10 @@ private:
     void ShowHelp();
     void ShowStatus();
     void RestartVoiceClient();
+    void StartVoiceClient();
 
     RxState state_;
+    std::unique_ptr<MainThreadWaker> waker_;
     std::unique_ptr<VoiceClient> voice_;
     std::vector<RxRadarScreen*> screens_;
 

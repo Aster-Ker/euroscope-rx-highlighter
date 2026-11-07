@@ -46,7 +46,8 @@ std::mt19937& Rng()
 
 } // namespace
 
-VoiceClient::VoiceClient(RxState& state, std::uint16_t port) : state_(state), port_(port)
+VoiceClient::VoiceClient(RxState& state, std::uint16_t port, std::function<void()> onChange)
+    : state_(state), port_(port), onChange_(std::move(onChange))
 {
 }
 
@@ -96,6 +97,7 @@ void VoiceClient::Run()
 
         state_.Clear();
         status_ = ConnectionStatus::Disconnected;
+        Notify();
 
         if (running_) {
             InterruptibleSleep(kReconnectDelayMs);
@@ -295,12 +297,15 @@ bool VoiceClient::RunWebSocket()
             switch (event.type) {
                 case VoiceEventType::RxBegin:
                     state_.RxBegin(event.callsign, event.frequencyHz);
+                    Notify();
                     break;
                 case VoiceEventType::RxEnd:
                     state_.RxEnd(event.callsign, event.frequencyHz);
+                    Notify();
                     break;
                 case VoiceEventType::VoiceDisconnected:
                     state_.Clear();
+                    Notify();
                     break;
                 default:
                     break;
@@ -385,6 +390,7 @@ bool VoiceClient::RunHttpPolling()
         anySuccess = true;
         status_ = ConnectionStatus::HttpPolling;
         state_.ReplaceTransmitting(ParseTransmittingList(body));
+        Notify();
         InterruptibleSleep(kPollIntervalMs);
     }
     return anySuccess;

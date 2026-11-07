@@ -12,6 +12,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <cstdint>
+#include <functional>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -30,7 +31,9 @@ enum class ConnectionStatus : int
 class VoiceClient
 {
 public:
-    VoiceClient(RxState& state, std::uint16_t port);
+    // `onChange` is called on the background thread whenever the RX state
+    // changes; it must be cheap and thread-safe (e.g. MainThreadWaker::Wake).
+    VoiceClient(RxState& state, std::uint16_t port, std::function<void()> onChange = {});
     ~VoiceClient();
 
     VoiceClient(const VoiceClient&) = delete;
@@ -56,8 +59,11 @@ private:
     void CloseSocket(Socket& sock);
     void InterruptibleSleep(int ms);
 
+    void Notify() { if (onChange_) onChange_(); }
+
     RxState& state_;
     const std::uint16_t port_;
+    std::function<void()> onChange_;
     std::atomic<bool> running_{false};
     std::atomic<ConnectionStatus> status_{ConnectionStatus::Disconnected};
     std::thread thread_;

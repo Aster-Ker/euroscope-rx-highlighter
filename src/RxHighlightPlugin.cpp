@@ -98,8 +98,11 @@ RxHighlightPlugin::RxHighlightPlugin()
 
     LoadSettings();
 
-    voice_ = std::make_unique<VoiceClient>(state_, port_);
-    voice_->Start();
+    // Updates the lists the moment TrackAudio reports a change, instead of
+    // waiting for EuroScope's 1-second OnTimer. The 100 ms timer ends the
+    // linger period on time.
+    waker_ = std::make_unique<MainThreadWaker>([this] { UpdateTransmitting(); }, 100);
+    StartVoiceClient();
 
     Message(std::string("Version ") + RXH_VERSION_STRING + " loaded. Type " + kCommand + " for help.");
 }
@@ -107,8 +110,9 @@ RxHighlightPlugin::RxHighlightPlugin()
 RxHighlightPlugin::~RxHighlightPlugin()
 {
     if (voice_) {
-        voice_->Stop();
+        voice_->Stop(); // stop the background thread before the waker goes away
     }
+    waker_.reset();
     for (auto* screen : screens_) {
         screen->Detach();
     }
@@ -255,7 +259,17 @@ void RxHighlightPlugin::RestartVoiceClient()
         voice_->Stop();
     }
     state_.Clear();
-    voice_ = std::make_unique<VoiceClient>(state_, port_);
+    StartVoiceClient();
+}
+
+void RxHighlightPlugin::StartVoiceClient()
+{
+    MainThreadWaker* waker = waker_.get();
+    voice_ = std::make_unique<VoiceClient>(state_, port_, [waker] {
+        if (waker != nullptr) {
+            waker->Wake();
+        }
+    });
     voice_->Start();
 }
 

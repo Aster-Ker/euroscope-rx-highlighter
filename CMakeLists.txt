@@ -25,6 +25,7 @@ endif()
 
 add_library(RxHighlighter SHARED
     src/dllmain.cpp
+    src/MainThreadWaker.cpp
     src/RxHighlightPlugin.cpp
     src/RxRadarScreen.cpp
     src/RxState.cpp

@@ -93,9 +93,9 @@ Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for
 
 ## Limitations
 
-* **Up to about 1 second of delay.** EuroScope gives plug-ins a 1-second timer to trigger a
-  redraw, so the highlight appears within about a second of the pilot keying up. The default
-  1.5 s linger makes sure even a quick "roger" is shown.
+* **Updates straight away.** As soon as TrackAudio reports a transmission, the plug-in asks
+  EuroScope to redraw, without waiting for EuroScope's 1-second plug-in timer. The default
+  1.5 s linger keeps a quick "roger" visible long enough to notice.
 * Highlights the **text colour** of the item. Plug-ins can't change a list row's background.
 * Matches on network callsign, so it lights up anyone you **receive** in TrackAudio, on any
   of your RX frequencies.
@@ -129,7 +129,8 @@ release automatically.
 
 ```
 src/dllmain.cpp            EuroScope entry points
-src/RxHighlightPlugin.*    Tag items, commands, settings, 1 s refresh
+src/RxHighlightPlugin.*    Tag items, commands, settings
+src/MainThreadWaker.*      Runs list updates on EuroScope's UI thread the moment RX changes
 src/RxRadarScreen.*        Redraw hook only (draws nothing on the radar)
 src/VoiceClient.*          Background Winsock client (WebSocket, then HTTP fallback)
 src/WebSocketCodec.*       Minimal RFC 6455 framing + HTTP response parsing
