@@ -115,8 +115,9 @@ cmake --build build --config Release
 ```
 
 `.github/workflows/build.yml` builds the DLL on every push. To publish a release, bump
-`RXH_VERSION_STRING` in `src/Version.h`, add `docs/releases/vX.Y.Z.md`, then push a tag
-`vX.Y.Z`. The workflow builds the DLL and creates the GitHub release with it attached.
+`RXH_VERSION_STRING` in `src/Version.h`, add `docs/releases/vX.Y.Z.md`, then publish a GitHub
+release with tag `vX.Y.Z` and those notes. The workflow builds the DLL and attaches it to the
+release automatically.
 
 ## Layout
 
