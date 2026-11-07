@@ -1,12 +1,12 @@
 # RX Highlighter – EuroScope plug-in
 
-Makes an aircraft's callsign **light up** in your EuroScope lists (departure list, arrival list,
-SIL, etc.) and tags **while that pilot is talking on frequency**. It can also draw a ring
-around the aircraft on the radar.
+Makes an aircraft's callsign **light up in your EuroScope lists** (departure list, arrival list,
+SIL, etc.) **while that pilot is talking on frequency**.
+
+It only changes the lists you set it up in. Nothing is drawn on the radar screen, and your
+radar tags stay exactly as they are.
 
 ![Departure list: BAW123's callsign lights up yellow with an RX marker while it transmits](docs/images/list.png)
-
-![Radar: a yellow ring around BAW123 while it transmits](docs/images/radar.png)
 
 <sub>These images are illustrations of the plug-in's behaviour, not real EuroScope screenshots.
 Colours and columns depend on your profile. Source: `docs/images/illustrations.html`.</sub>
@@ -31,11 +31,11 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
 * Own command prefix (`.rxh`), so it never takes `.ukcp` or `.vfpc` commands.
 * Own tag items, all prefixed `RX Highlighter:`. EuroScope scopes item IDs per plug-in,
   so they can't clash with UKCP or vFPC items.
-* Its radar drawing adds **no clickable screen objects**, so it can't steal clicks, menus or
-  ASR settings from UKCP or vFPC.
+* Draws **nothing on the radar** and adds no clickable screen objects, so it can't steal
+  clicks, menus or ASR settings from UKCP or vFPC.
 * Never calls EuroScope from its background thread. The network thread only touches its own
   data, and unloading or closing EuroScope takes well under a second.
-* No conflicting settings keys (`RxColour`, `RxLingerMs`, `RxHalo`, `RxMarker`, `RxPort`).
+* No conflicting settings keys (`RxColour`, `RxLingerMs`, `RxMarker`, `RxPort`).
 * Talks only to `127.0.0.1:49080`, as a client. Neither UKCP nor vFPC uses that port.
 
 ## Install
@@ -44,9 +44,7 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
    controller pack (`...\UK\Data\Plugin\`).
 2. EuroScope → **OTHER SET → Plug-ins… → Load** → choose `RxHighlighter.dll`.
    UKCP and vFPC stay loaded as normal. Load order does not matter.
-3. For the radar ring, select RX Highlighter in the Plug-ins dialog and add your display type
-   (e.g. `Standard ES radar screen`) to **Allowed to draw on types**.
-4. Save your profile/plug-in settings when EuroScope asks, so the plug-in loads next time.
+3. Save your profile/plug-in settings when EuroScope asks, so the plug-in loads next time.
 
 ## Make the list line light up
 
@@ -55,8 +53,8 @@ plug-in provides a callsign column that changes colour itself:
 
 ![Setup: change the Callsign column's tag item type and keep the same mouse functions](docs/images/setup.png)
 
-1. Open the list (e.g. Departure List) → click the list's header menu → **Columns setup**
-   (or the tag editor for radar tags).
+1. Open the list (e.g. Departure List) → click the list's header menu → **Columns setup**.
+   Leave your radar tag definitions alone, so the radar doesn't change.
 2. Select the **Callsign** column and change its *Tag item type* to
    **`RX Highlighter: Callsign (lights up on RX)`**.
 3. **Set the column's left/right mouse-button functions to what they were before.** This is
@@ -81,7 +79,6 @@ Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for
 | `.rxh status` | Connection state, settings and who is lit up |
 | `.rxh colour R G B` | Highlight colour (default `255 230 0`, bright yellow) |
 | `.rxh linger MS` | Stay lit for MS after the transmission ends (default 1500, 0–10000) |
-| `.rxh halo on\|off` | Ring around the aircraft on the radar (default on) |
 | `.rxh marker TEXT` | Text shown by the marker item (default `RX`) |
 | `.rxh port N` | Voice client port (default 49080) |
 | `.rxh test CALLSIGN [SEC]` | Pretend CALLSIGN is transmitting (1–60 s, default 5) |
@@ -123,7 +120,7 @@ it from the workflow run's *Artifacts*.
 ```
 src/dllmain.cpp            EuroScope entry points
 src/RxHighlightPlugin.*    Tag items, commands, settings, 1 s refresh
-src/RxRadarScreen.*        Optional ring around transmitting aircraft
+src/RxRadarScreen.*        Redraw hook only (draws nothing on the radar)
 src/VoiceClient.*          Background Winsock client (WebSocket, then HTTP fallback)
 src/WebSocketCodec.*       Minimal RFC 6455 framing + HTTP response parsing
 src/VoiceMessage.*         TrackAudio JSON message parsing

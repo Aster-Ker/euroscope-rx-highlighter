@@ -55,46 +55,6 @@
 
 <br><br>
 
-<!-- 2: radar ring -->
-<div class="shot" id="radar">
-  <div class="caption"><b>Radar ring</b> (optional, <code>.rxh halo on|off</code>). The aircraft that is talking gets a ring in the highlight colour.</div>
-  <svg width="760" height="420" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="display:block;background:#0b1a24">
-    <defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#12283a" stroke-width="1"/></pattern></defs>
-    <rect width="760" height="420" fill="url(#g)"/>
-    <!-- airways / coastline-ish lines -->
-    <path d="M30 380 L250 230 L520 170 L740 60" stroke="#1d3a52" stroke-width="2" fill="none"/>
-    <path d="M60 60 L300 200 L460 360" stroke="#1d3a52" stroke-width="2" fill="none"/>
-    <path d="M520 170 L700 330" stroke="#1d3a52" stroke-width="2" fill="none"/>
-    <!-- runway -->
-    <rect x="300" y="262" width="110" height="5" fill="#3b5a72" transform="rotate(-8 355 264)"/>
-    <g font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
-      <!-- target 1 transmitting -->
-      <circle cx="430" cy="196" r="15" fill="none" stroke="#ffe600" stroke-width="2.4"/>
-      <rect x="425" y="191" width="10" height="10" fill="none" stroke="#7ee787" stroke-width="1.6"/>
-      <line x1="436" y1="190" x2="470" y2="160" stroke="#7ee787" stroke-width="1"/>
-      <text x="474" y="148" fill="#ffe600" font-weight="bold">BAW123</text>
-      <text x="474" y="164" fill="#7ee787">060 B77W</text>
-      <text x="474" y="180" fill="#7ee787">CPT 250</text>
-      <!-- other targets -->
-      <rect x="215" y="235" width="10" height="10" fill="none" stroke="#7ee787" stroke-width="1.6"/>
-      <line x1="214" y1="234" x2="180" y2="205" stroke="#7ee787" stroke-width="1"/>
-      <text x="110" y="190" fill="#7ee787">EZY45K</text>
-      <text x="110" y="206" fill="#7ee787">040 A320</text>
-      <rect x="590" y="300" width="10" height="10" fill="none" stroke="#79c0ff" stroke-width="1.6"/>
-      <line x1="601" y1="309" x2="630" y2="335" stroke="#79c0ff" stroke-width="1"/>
-      <text x="634" y="345" fill="#79c0ff">VIR3</text>
-      <text x="634" y="361" fill="#79c0ff">080 A35K</text>
-      <rect x="120" y="90" width="10" height="10" fill="none" stroke="#5f6b78" stroke-width="1.4"/>
-      <text x="138" y="88" fill="#5f6b78">DLH4TG</text>
-      <rect x="660" y="80" width="10" height="10" fill="none" stroke="#5f6b78" stroke-width="1.4"/>
-      <text x="678" y="78" fill="#5f6b78">SAS512</text>
-    </g>
-  </svg>
-  <div class="note">Illustration, not a real EuroScope screenshot. Needs "Allowed to draw on types" set in the Plug-ins dialog.</div>
-</div>
-
-<br><br>
-
 <!-- 3: column setup -->
 <div class="shot" id="setup">
   <div class="caption"><b>Setup.</b> Change the Callsign column's tag item type. Keep the same mouse functions so UKCP / SRD tools still work.</div>
@@ -134,10 +94,10 @@
 <div class="shot" id="messages">
   <div class="caption"><b>Commands.</b> <code>.rxh test</code> checks the setup without anyone on frequency. <code>.rxh status</code> shows the connection.</div>
   <div class="msgs">
-    <div><span class="h">[RX Highlighter]</span> <span class="c">Version 1.0.0 loaded. Type .rxh for help.</span></div>
+    <div><span class="h">[RX Highlighter]</span> <span class="c">Version 1.1.0 loaded. Type .rxh for help.</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Connected to TrackAudio.</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Lighting up BAW123 for 5 s.</span></div>
-    <div><span class="h">[RX Highlighter]</span> <span class="c">Voice: connected to TrackAudio (WebSocket) on port 49080 | colour 255 230 0 | linger 1500 ms | halo on | marker 'RX'</span></div>
+    <div><span class="h">[RX Highlighter]</span> <span class="c">Voice: connected to TrackAudio (WebSocket) on port 49080 | colour 255 230 0 | linger 1500 ms | marker 'RX'</span></div>
     <div><span class="h">[RX Highlighter]</span> <span class="c">Lit up now: BAW123</span></div>
   </div>
   <div class="note">Message text is what the plug-in prints. The chat window styling is illustrative.</div>

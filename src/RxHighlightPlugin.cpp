@@ -96,9 +96,6 @@ void RxHighlightPlugin::LoadSettings()
             linger_ = std::chrono::milliseconds(ms);
         }
     }
-    if (const char* v = GetDataFromSettings("RxHalo")) {
-        halo_ = std::string(v) != "0";
-    }
     if (const char* v = GetDataFromSettings("RxMarker")) {
         if (*v != '\0') {
             marker_ = v;
@@ -226,7 +223,6 @@ void RxHighlightPlugin::ShowHelp()
     Message(std::string(kCommand) + " status               - connection and settings");
     Message(std::string(kCommand) + " colour R G B         - highlight colour, e.g. .rxh colour 255 230 0");
     Message(std::string(kCommand) + " linger MS            - keep lit for MS after RX ends (0-10000)");
-    Message(std::string(kCommand) + " halo on|off          - ring around the target on the radar");
     Message(std::string(kCommand) + " marker TEXT          - text for the 'Transmitting marker' item");
     Message(std::string(kCommand) + " port N               - voice client port (default 49080)");
     Message(std::string(kCommand) + " test CALLSIGN [SEC]  - pretend CALLSIGN is transmitting");
@@ -242,14 +238,13 @@ void RxHighlightPlugin::ShowStatus()
     std::snprintf(
         buf,
         sizeof(buf),
-        "Voice: %s on port %u | colour %d %d %d | linger %ld ms | halo %s | marker '%s'",
+        "Voice: %s on port %u | colour %d %d %d | linger %ld ms | marker '%s'",
         statusText,
         static_cast<unsigned>(port_),
         GetRValue(colour_),
         GetGValue(colour_),
         GetBValue(colour_),
         static_cast<long>(linger_.count()),
-        halo_ ? "on" : "off",
         marker_.c_str());
     Message(buf);
 
@@ -290,13 +285,6 @@ bool RxHighlightPlugin::OnCompileCommand(const char* sCommandLine)
         linger_ = std::chrono::milliseconds(ms);
         SaveDataToSettings("RxLingerMs", "RX Highlighter linger (ms)", std::to_string(ms).c_str());
         Message("Linger set to " + std::to_string(ms) + " ms.");
-    } else if (sub == "halo" && args.size() == 3 && (Lower(args[2]) == "on" || Lower(args[2]) == "off")) {
-        halo_ = Lower(args[2]) == "on";
-        SaveDataToSettings("RxHalo", "RX Highlighter radar ring", halo_ ? "1" : "0");
-        for (auto* screen : screens_) {
-            screen->RequestRefresh();
-        }
-        Message(std::string("Radar ring ") + (halo_ ? "on." : "off."));
     } else if (sub == "marker" && args.size() >= 3) {
         marker_ = args[2];
         if (marker_.size() > 15) {

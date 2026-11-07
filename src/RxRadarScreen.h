@@ -8,15 +8,16 @@ namespace RxHighlight {
 
 class RxHighlightPlugin;
 
-// Draws a ring around the radar target of whoever is transmitting.
-// It never registers clickable screen objects, so it cannot steal clicks
-// or menus from UK Controller Plugin / vFPC / TopSky etc.
+// Draws nothing. It only exists so the plug-in can ask EuroScope to redraw
+// (RequestRefresh) as soon as someone starts or stops transmitting, which
+// makes the list update straight away. Nothing is drawn on the radar and no
+// clickable screen objects are registered, so it cannot affect the radar
+// picture or steal clicks/menus from UKCP, vFPC, TopSky etc.
 class RxRadarScreen final : public EuroScopePlugIn::CRadarScreen
 {
 public:
     explicit RxRadarScreen(RxHighlightPlugin* owner);
 
-    void OnRefresh(HDC hDC, int Phase) override;
     void OnAsrContentToBeClosed() override;
 
     // Called if the plugin is unloaded before the display is closed.

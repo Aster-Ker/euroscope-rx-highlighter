@@ -47,9 +47,6 @@ public:
     // Called by RxRadarScreen.
     void RadarScreenClosed(RxRadarScreen* screen);
     bool IsTransmitting(const std::string& normalisedCallsign) const;
-    const std::set<std::string>& Transmitting() const { return transmitting_; }
-    COLORREF HighlightColour() const { return colour_; }
-    bool HaloEnabled() const { return halo_; }
 
 private:
     void LoadSettings();
@@ -74,7 +71,6 @@ private:
     // Settings
     COLORREF colour_ = RGB(255, 230, 0);
     std::chrono::milliseconds linger_{1500};
-    bool halo_ = true;
     std::string marker_ = "RX";
     std::uint16_t port_ = 49080;
 };
