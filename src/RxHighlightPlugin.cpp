@@ -51,6 +51,38 @@ bool ParseInt(const std::string& text, long min, long max, long& out)
     return true;
 }
 
+// Parses "R,G,B" (each 0-255).
+bool ParseRgb(const std::string& text, COLORREF& out)
+{
+    long rgb[3] = {0, 0, 0};
+    std::size_t start = 0;
+    for (int i = 0; i < 3; ++i) {
+        const std::size_t comma = text.find(',', start);
+        const bool last = i == 2;
+        if (last != (comma == std::string::npos)) {
+            return false;
+        }
+        const std::string part = text.substr(start, last ? std::string::npos : comma - start);
+        if (!ParseInt(part, 0, 255, rgb[i])) {
+            return false;
+        }
+        start = comma + 1;
+    }
+    out = RGB(rgb[0], rgb[1], rgb[2]);
+    return true;
+}
+
+// Parses three separate command arguments R G B.
+bool ParseRgbArgs(const std::vector<std::string>& args, std::size_t first, COLORREF& out)
+{
+    return args.size() == first + 3 && ParseRgb(args[first] + "," + args[first + 1] + "," + args[first + 2], out);
+}
+
+std::string RgbText(COLORREF c)
+{
+    return std::to_string(GetRValue(c)) + "," + std::to_string(GetGValue(c)) + "," + std::to_string(GetBValue(c));
+}
+
 } // namespace
 
 RxHighlightPlugin::RxHighlightPlugin()
@@ -85,10 +117,10 @@ RxHighlightPlugin::~RxHighlightPlugin()
 void RxHighlightPlugin::LoadSettings()
 {
     if (const char* v = GetDataFromSettings("RxColour")) {
-        int r = 0, g = 0, b = 0;
-        if (std::sscanf(v, "%d,%d,%d", &r, &g, &b) == 3) {
-            colour_ = RGB(std::clamp(r, 0, 255), std::clamp(g, 0, 255), std::clamp(b, 0, 255));
-        }
+        ParseRgb(v, colour_);
+    }
+    if (const char* v = GetDataFromSettings("RxNormalColour")) {
+        normalColourSet_ = ParseRgb(v, normalColour_);
     }
     if (const char* v = GetDataFromSettings("RxLingerMs")) {
         long ms = 0;
@@ -154,9 +186,12 @@ void RxHighlightPlugin::OnGetTagItem(
     if (rx) {
         *pColorCode = EuroScopePlugIn::TAG_COLOR_RGB_DEFINED;
         *pRGB = colour_;
+    } else if (normalColourSet_ && ItemCode == TAG_ITEM_RX_CALLSIGN) {
+        *pColorCode = EuroScopePlugIn::TAG_COLOR_RGB_DEFINED;
+        *pRGB = normalColour_;
     }
-    // When not transmitting we leave the colour alone, so EuroScope (and the
-    // list/tag definition) applies its normal assumed/notified/etc. colour.
+    // Otherwise we leave the colour alone, so EuroScope applies its normal
+    // assumed / notified / non-concerned colour.
 }
 
 void RxHighlightPlugin::UpdateTransmitting()
@@ -172,9 +207,14 @@ void RxHighlightPlugin::UpdateTransmitting()
 
     if (next != transmitting_) {
         transmitting_.swap(next);
-        for (auto* screen : screens_) {
-            screen->RequestRefresh();
-        }
+        RefreshScreens();
+    }
+}
+
+void RxHighlightPlugin::RefreshScreens()
+{
+    for (auto* screen : screens_) {
+        screen->RequestRefresh();
     }
 }
 
@@ -222,6 +262,8 @@ void RxHighlightPlugin::ShowHelp()
 {
     Message(std::string(kCommand) + " status               - connection and settings");
     Message(std::string(kCommand) + " colour R G B         - highlight colour, e.g. .rxh colour 255 230 0");
+    Message(std::string(kCommand) + " normal R G B         - callsign colour when NOT transmitting");
+    Message(std::string(kCommand) + " normal default       - use EuroScope's own colours when not transmitting");
     Message(std::string(kCommand) + " linger MS            - keep lit for MS after RX ends (0-10000)");
     Message(std::string(kCommand) + " marker TEXT          - text for the 'Transmitting marker' item");
     Message(std::string(kCommand) + " port N               - voice client port (default 49080)");
@@ -234,16 +276,22 @@ void RxHighlightPlugin::ShowStatus()
     const char* statusText = status == ConnectionStatus::TrackAudioWebSocket ? "connected to TrackAudio (WebSocket)"
                              : status == ConnectionStatus::HttpPolling      ? "connected (HTTP /transmitting)"
                                                                            : "not connected - is TrackAudio running?";
-    char buf[256];
+    std::string normalText = "EuroScope default";
+    if (normalColourSet_) {
+        normalText = std::to_string(GetRValue(normalColour_)) + " " + std::to_string(GetGValue(normalColour_)) + " " +
+                     std::to_string(GetBValue(normalColour_));
+    }
+    char buf[300];
     std::snprintf(
         buf,
         sizeof(buf),
-        "Voice: %s on port %u | colour %d %d %d | linger %ld ms | marker '%s'",
+        "Voice: %s on port %u | colour %d %d %d | normal %s | linger %ld ms | marker '%s'",
         statusText,
         static_cast<unsigned>(port_),
         GetRValue(colour_),
         GetGValue(colour_),
         GetBValue(colour_),
+        normalText.c_str(),
         static_cast<long>(linger_.count()),
         marker_.c_str());
     Message(buf);
@@ -267,15 +315,28 @@ bool RxHighlightPlugin::OnCompileCommand(const char* sCommandLine)
     if (sub == "status") {
         ShowStatus();
     } else if ((sub == "colour" || sub == "color") && args.size() == 5) {
-        long r = 0, g = 0, b = 0;
-        if (!ParseInt(args[2], 0, 255, r) || !ParseInt(args[3], 0, 255, g) || !ParseInt(args[4], 0, 255, b)) {
+        if (!ParseRgbArgs(args, 2, colour_)) {
             Message("Colour values must be 0-255, e.g. .rxh colour 255 230 0");
             return true;
         }
-        colour_ = RGB(r, g, b);
-        const std::string value = std::to_string(r) + "," + std::to_string(g) + "," + std::to_string(b);
-        SaveDataToSettings("RxColour", "RX Highlighter colour (R,G,B)", value.c_str());
-        Message("Highlight colour set to " + value + ".");
+        SaveDataToSettings("RxColour", "RX Highlighter colour (R,G,B)", RgbText(colour_).c_str());
+        RefreshScreens();
+        Message("Highlight colour set to " + RgbText(colour_) + ".");
+    } else if (sub == "normal" && args.size() == 3 && Lower(args[2]) == "default") {
+        normalColourSet_ = false;
+        SaveDataToSettings("RxNormalColour", "RX Highlighter colour when not transmitting", "default");
+        RefreshScreens();
+        Message("Callsigns use EuroScope's own colours when not transmitting.");
+    } else if (sub == "normal" && args.size() == 5) {
+        if (!ParseRgbArgs(args, 2, normalColour_)) {
+            Message("Colour values must be 0-255, e.g. .rxh normal 255 255 255");
+            return true;
+        }
+        normalColourSet_ = true;
+        SaveDataToSettings(
+            "RxNormalColour", "RX Highlighter colour when not transmitting", RgbText(normalColour_).c_str());
+        RefreshScreens();
+        Message("Callsign colour when not transmitting set to " + RgbText(normalColour_) + ".");
     } else if (sub == "linger" && args.size() == 3) {
         long ms = 0;
         if (!ParseInt(args[2], 0, 10000, ms)) {

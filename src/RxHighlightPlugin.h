@@ -52,6 +52,7 @@ private:
     void LoadSettings();
     void Message(const std::string& text, bool flash = false);
     void UpdateTransmitting();
+    void RefreshScreens();
     void ShowHelp();
     void ShowStatus();
     void RestartVoiceClient();
@@ -70,6 +71,10 @@ private:
 
     // Settings
     COLORREF colour_ = RGB(255, 230, 0);
+    // Colour of the callsign when NOT transmitting. Unset = EuroScope's own
+    // colours (assumed / notified / non-concerned etc.).
+    bool normalColourSet_ = false;
+    COLORREF normalColour_ = RGB(255, 255, 255);
     std::chrono::milliseconds linger_{1500};
     std::string marker_ = "RX";
     std::uint16_t port_ = 49080;

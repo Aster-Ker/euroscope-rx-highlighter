@@ -35,7 +35,7 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
   clicks, menus or ASR settings from UKCP or vFPC.
 * Never calls EuroScope from its background thread. The network thread only touches its own
   data, and unloading or closing EuroScope takes well under a second.
-* No conflicting settings keys (`RxColour`, `RxLingerMs`, `RxMarker`, `RxPort`).
+* No conflicting settings keys (`RxColour`, `RxNormalColour`, `RxLingerMs`, `RxMarker`, `RxPort`).
 * Talks only to `127.0.0.1:49080`, as a client. Neither UKCP nor vFPC uses that port.
 
 ## Install
@@ -69,6 +69,10 @@ plug-in provides a callsign column that changes colour itself:
 When the pilot isn't transmitting, the callsign keeps EuroScope's normal colour (assumed,
 notified, etc.). Only while they're on frequency does it change to the highlight colour.
 
+If the callsign looks too dark when nobody is talking, choose your own colour for that, e.g.
+`.rxh normal 255 255 255` for white. This replaces EuroScope's assumed/notified colours in
+that column. Type `.rxh normal default` to go back to EuroScope's colours.
+
 Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for 5 seconds.
 
 ## Commands
@@ -80,6 +84,8 @@ Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for
 | `.rxh` | Help |
 | `.rxh status` | Connection state, settings and who is lit up |
 | `.rxh colour R G B` | Highlight colour (default `255 230 0`, bright yellow) |
+| `.rxh normal R G B` | Callsign colour when **not** transmitting, e.g. `.rxh normal 255 255 255` |
+| `.rxh normal default` | Use EuroScope's own colours when not transmitting (the default) |
 | `.rxh linger MS` | Stay lit for MS after the transmission ends (default 1500, 0–10000) |
 | `.rxh marker TEXT` | Text shown by the marker item (default `RX`) |
 | `.rxh port N` | Voice client port (default 49080) |
