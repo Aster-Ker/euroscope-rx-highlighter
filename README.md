@@ -4,6 +4,13 @@ Makes an aircraft's callsign **light up** in your EuroScope lists (departure lis
 SIL, etc.) and tags **while that pilot is talking on frequency**. It can also draw a ring
 around the aircraft on the radar.
 
+![Departure list: BAW123's callsign lights up yellow with an RX marker while it transmits](docs/images/list.png)
+
+![Radar: a yellow ring around BAW123 while it transmits](docs/images/radar.png)
+
+<sub>These images are illustrations of the plug-in's behaviour, not real EuroScope screenshots.
+Colours and columns depend on your profile. Source: `docs/images/illustrations.html`.</sub>
+
 It gets "who is transmitting" from your voice client:
 
 | Voice client | How |
@@ -46,6 +53,8 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
 EuroScope doesn't let plug-ins recolour EuroScope's own built-in columns. Instead, this
 plug-in provides a callsign column that changes colour itself:
 
+![Setup: change the Callsign column's tag item type and keep the same mouse functions](docs/images/setup.png)
+
 1. Open the list (e.g. Departure List) → click the list's header menu → **Columns setup**
    (or the tag editor for radar tags).
 2. Select the **Callsign** column and change its *Tag item type* to
@@ -63,6 +72,8 @@ notified, etc.). Only while they're on frequency does it change to the highlight
 Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for 5 seconds.
 
 ## Commands
+
+![Example plug-in messages from .rxh test and .rxh status](docs/images/messages.png)
 
 | Command | |
 |---|---|
