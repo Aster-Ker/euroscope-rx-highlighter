@@ -86,16 +86,16 @@ Check your setup without anyone talking: `.rxh test BAW123` lights up BAW123 for
 | `.rxh colour R G B` | Highlight colour (default `255 230 0`, bright yellow) |
 | `.rxh normal R G B` | Callsign colour when **not** transmitting (default `255 255 255`, white) |
 | `.rxh normal default` | Use EuroScope's own colours when not transmitting |
-| `.rxh linger MS` | Stay lit for MS after the transmission ends (default 1500, 0–10000) |
+| `.rxh linger MS` | Stay lit for MS after the transmission ends (default 0 = turn off as soon as PTT is released, max 10000) |
 | `.rxh marker TEXT` | Text shown by the marker item (default `RX`) |
 | `.rxh port N` | Voice client port (default 49080) |
 | `.rxh test CALLSIGN [SEC]` | Pretend CALLSIGN is transmitting (1–60 s, default 5) |
 
 ## Limitations
 
-* **Updates straight away.** As soon as TrackAudio reports a transmission, the plug-in asks
-  EuroScope to redraw, without waiting for EuroScope's 1-second plug-in timer. The default
-  1.5 s linger keeps a quick "roger" visible long enough to notice.
+* **Updates straight away.** As soon as TrackAudio reports that a pilot pressed or released
+  PTT, the plug-in asks EuroScope to redraw, without waiting for EuroScope's 1-second plug-in
+  timer. Use `.rxh linger MS` if you'd like the highlight to stay on briefly after they stop.
 * Highlights the **text colour** of the item. Plug-ins can't change a list row's background.
 * Matches on network callsign, so it lights up anyone you **receive** in TrackAudio, on any
   of your RX frequencies.

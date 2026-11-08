@@ -79,7 +79,8 @@ private:
     // (assumed / notified / non-concerned etc.).
     bool normalColourSet_ = true;
     COLORREF normalColour_ = RGB(255, 255, 255);
-    std::chrono::milliseconds linger_{1500};
+    // How long to stay lit after PTT is released. 0 = turn off immediately.
+    std::chrono::milliseconds linger_{0};
     std::string marker_ = "RX";
     std::uint16_t port_ = 49080;
 };
