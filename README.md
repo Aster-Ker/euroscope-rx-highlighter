@@ -48,6 +48,28 @@ Built to load next to **UK Controller Plugin (UKCP)** and the SRD tools
    UKCP and vFPC stay loaded as normal. Load order does not matter.
 3. Save your profile/plug-in settings when EuroScope asks, so the plug-in loads next time.
 
+## Automatic setup for VATSIM UK SMR profiles
+
+`tools/Setup-RxHighlighter-UK-SMR.bat` does the install and the list setup below for every
+UK SMR profile in one go:
+
+* copies `RxHighlighter.dll` into `UK\Data\Plugin`. It uses the DLL next to the batch file,
+  or downloads the latest release if there isn't one.
+* loads the plug-in in every profile that uses the SMR lists (36 profiles in the current pack)
+* switches every callsign column in `Lists_SMR.txt` and `Lists_SMR_RECAT.txt` to
+  **RX Highlighter: Callsign**, keeping each column's mouse-button functions, so UKCP,
+  SRD Search and vFPC clicks are unchanged
+* backs up every file it changes as `<file>.rxh-backup`
+
+1. Close EuroScope.
+2. Download [Setup-RxHighlighter-UK-SMR.bat](https://github.com/Aster-Ker/euroscope-rx-highlighter/raw/main/tools/Setup-RxHighlighter-UK-SMR.bat)
+   (and optionally [Undo-RxHighlighter-UK-SMR.bat](https://github.com/Aster-Ker/euroscope-rx-highlighter/raw/main/tools/Undo-RxHighlighter-UK-SMR.bat))
+   into your `UK` folder, the one containing `Data`, `Heathrow`, etc.
+3. Double-click `Setup-RxHighlighter-UK-SMR.bat`.
+
+Run it again after a UK controller pack update, because the updater may replace these files.
+Running it twice is safe. `Undo-RxHighlighter-UK-SMR.bat` restores the backups and removes the DLL.
+
 ## Make the list line light up
 
 EuroScope doesn't let plug-ins recolour EuroScope's own built-in columns. Instead, this
